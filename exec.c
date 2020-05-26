@@ -60,6 +60,16 @@ exec(char *path, char **argv)
   end_op();
   ip = 0;
 
+  sz = PGROUNDUP(sz);
+
+  uint ustackbase = KERNBASE - 4; //cs153_lab3: the base of the user stack located a word below KERNBASE
+  sp = allocuvm(pgdir, ustackbase - PGSIZE, ustackbase); //cs153_lab3: allocate a page of user virtual memory starting from ustackbase - PGSIZE to ustackbase and set sp (stack pointer) to ustackbase
+  if (!sp) //cs153_lab3: if sp allocuvm return 0 (error)
+    goto bad;
+
+  curproc->userStack_numPages = 1; //cs153_lab3: only allocated a single page for the user stack to grow in
+
+/*   Old xv6 code for setting up the user stack
   // Allocate two pages at the next page boundary.
   // Make the first inaccessible.  Use the second as the user stack.
   sz = PGROUNDUP(sz);
@@ -67,6 +77,7 @@ exec(char *path, char **argv)
     goto bad;
   clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
   sp = sz;
+*/
 
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
