@@ -36,8 +36,7 @@ fetchstr(uint addr, char **pp)
   //struct proc *curproc = myproc();
 
   //if(addr >= curproc->sz)
-  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user statck bas
-e
+  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
     return -1;
   *pp = (char*)addr;
   ep = (char*)(KERNBASE - 4); //cs153_lab3: s shouldn't go above user stack base in thr following for loop
@@ -63,7 +62,7 @@ int
 argptr(int n, char **pp, int size)
 {
   int i;
-  struct proc *curproc = myproc();
+  //struct proc *curproc = myproc();
   uint ustackbase = KERNBASE - 4; 
 
   if(argint(n, &i) < 0)
