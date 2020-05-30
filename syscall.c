@@ -83,6 +83,7 @@ argptr(int n, char **pp, int size)
   int i;
   struct proc *curproc = myproc();
   uint ustackbase = KERNBASE - 4; 
+  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
 
   if(argint(n, &i) < 0)
     return -1;
