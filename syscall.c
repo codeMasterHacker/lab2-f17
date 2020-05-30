@@ -17,11 +17,23 @@
 int
 fetchint(uint addr, int *ip)
 {
-  //struct proc *curproc = myproc();
-
+  struct proc *curproc = myproc();
   //if(addr >= curproc->sz || addr+4 > curproc->sz)
-  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user statck base
+  //if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user statck base
+  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
+
+  if (addr >= KERNBASE - 4)
     return -1;
+
+  if (addr + 4 > KERNBASE - 4)
+    return -1;
+
+  if (addr >= curproc->sz && addr <= stacktop)
+    return -1;
+
+  if (addr+4 > curproc->sz && addr-4 < stacktop)
+    return -1;
+
   *ip = *(int*)(addr);
   return 0;
 }
@@ -33,11 +45,18 @@ int
 fetchstr(uint addr, char **pp)
 {
   char *s, *ep;
-  //struct proc *curproc = myproc();
+  struct proc *curproc = myproc();
 
   //if(addr >= curproc->sz)
-  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
+  //if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
+  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
+
+  if (addr >= KERNBASE - 4)
     return -1;
+
+  if (addr >= curproc->sz && addr <= stacktop)
+    return -1;
+
   *pp = (char*)addr;
   ep = (char*)(KERNBASE - 4); //cs153_lab3: s shouldn't go above user stack base in thr following for loop
   //ep = (char*)curproc->sz;
@@ -62,14 +81,23 @@ int
 argptr(int n, char **pp, int size)
 {
   int i;
-  //struct proc *curproc = myproc();
+  struct proc *curproc = myproc();
   uint ustackbase = KERNBASE - 4; 
 
   if(argint(n, &i) < 0)
     return -1;
   //if(size < 0 || (uint)i >= curproc->sz || (uint)i+size > curproc->sz)
-  if (size < 0 || (uint) i >= ustackbase || (uint)i+size > ustackbase)
+  if (size < 0)
     return -1;
+
+  if ((uint)i >= ustackbase || (uint)i+size > ustackbase)
+    return -1;
+
+  if ( (uint)i >= curproc->sz && (uint)i <= stacktop )
+    return -1;
+
+  if ( (uint)(i+4) > curproc->sz && (uint)(i-4) < stacktop )
+
   *pp = (char*)i;
   return 0;
 }
