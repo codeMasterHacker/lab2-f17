@@ -46,7 +46,24 @@ trap(struct trapframe *tf)
     return;
   }
 
+  unit lowAddress, highAddress, faultyAddress;
+
   switch(tf->trapno){
+  case T_PGFLT: //cs153_lab3: page fault handler
+    highAddress = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
+    lowAddress = highAddress - PGSIZE; //cs153_lab3: the page right under the current top of the stack
+    faultyAddress = rcr2();
+
+    if (faultyAddress > lowAddress && faultyAddress < highAddress) //cs153_lab3: check if the page fault was caused by an access to the page right under the current top of the stack
+    {
+      allocuvm(myproc()->pgdir, lowAddress, highAddress); //cs153_lab3: allocate and map the page
+      myproc()->userStack_numPages++; //cs153_lab3: add a single page to the user stack
+    }
+    else
+      goto Default; //cs153_lab3: go to the default handler and do a kernel panic like we did before
+
+    break;
+
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
       acquire(&tickslock);
@@ -78,6 +95,7 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
 
+  Default:
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
