@@ -97,7 +97,8 @@ argptr(int n, char **pp, int size)
   if ( (uint)i >= curproc->sz && (uint)i <= stacktop )
     return -1;
 
-  if ( (uint)(i+4) > curproc->sz && (uint)(i-4) < stacktop )
+  if ( (uint)(i+size) > curproc->sz && (uint)(i-size) < stacktop )
+    return -1;
 
   *pp = (char*)i;
   return 0;
