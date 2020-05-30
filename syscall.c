@@ -33,7 +33,7 @@ int
 fetchstr(uint addr, char **pp)
 {
   char *s, *ep;
-  ''struct proc *curproc = myproc();
+  //struct proc *curproc = myproc();
 
   //if(addr >= curproc->sz)
   if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
