@@ -14,6 +14,7 @@ int main(int argc, char** argv)
     memset(buffer, 0, size); 
 
     printf(1, "If there is no kernal panic, then the page right under the current top of the stack wass allocated and mapped. SUCCESS!\n");
+    printf(1, "%p\n", &argc);
 
     exit();
     return 0;
