@@ -58,7 +58,7 @@ trap(struct trapframe *tf)
     {
       allocuvm(myproc()->pgdir, lowAddress, highAddress); //cs153_lab3: allocate and map the page
       myproc()->userStack_numPages++; //cs153_lab3: add a single page to the user stack
-      cprintf("Current top of user stack: %d\n", KERNBASE - (myproc()->userStack_numPages * PGSIZE));
+      cprintf("Current top of user stack: %x\n", KERNBASE - (myproc()->userStack_numPages * PGSIZE));
     }
     else
       goto Default; //cs153_lab3: go to the default handler and do a kernel panic like we did before
