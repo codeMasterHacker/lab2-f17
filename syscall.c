@@ -19,19 +19,7 @@ fetchint(uint addr, int *ip)
 {
   struct proc *curproc = myproc();
   //if(addr >= curproc->sz || addr+4 > curproc->sz)
-  //if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user statck base
-  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
-
-  if (addr >= KERNBASE - 4)
-    return -1;
-
-  if (addr + 4 > KERNBASE - 4)
-    return -1;
-
-  if (addr >= curproc->sz && addr <= stacktop)
-    return -1;
-
-  if (addr+4 > curproc->sz && addr-4 < stacktop)
+  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user statck base
     return -1;
 
   *ip = *(int*)(addr);
@@ -48,13 +36,7 @@ fetchstr(uint addr, char **pp)
   struct proc *curproc = myproc();
 
   //if(addr >= curproc->sz)
-  //if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
-  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
-
-  if (addr >= KERNBASE - 4)
-    return -1;
-
-  if (addr >= curproc->sz && addr <= stacktop)
+  if (addr >= KERNBASE - 4) //cs153_lab3: addr shouldn't come from above user stack base
     return -1;
 
   *pp = (char*)addr;
@@ -83,22 +65,13 @@ argptr(int n, char **pp, int size)
   int i;
   struct proc *curproc = myproc();
   uint ustackbase = KERNBASE - 4; 
-  uint stacktop = KERNBASE - (myproc()->userStack_numPages * PGSIZE); //cs153_lab3: the current top of the stack
 
   if(argint(n, &i) < 0)
     return -1;
   //if(size < 0 || (uint)i >= curproc->sz || (uint)i+size > curproc->sz)
-  if (size < 0)
+  if(size < 0 || (uint)i >= ustackbase || (uint)i+size > ustackbase)
     return -1;
 
-  if ((uint)i >= ustackbase || (uint)i+size > ustackbase)
-    return -1;
-
-  if ( (uint)i >= curproc->sz && (uint)i <= stacktop )
-    return -1;
-
-  if ( (uint)(i+size) > curproc->sz && (uint)(i-size) < stacktop )
-    return -1;
 
   *pp = (char*)i;
   return 0;
