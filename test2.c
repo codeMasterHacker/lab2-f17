@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     char buffer[size];
     memset(buffer, 0, size); 
 
-    printf(1, "If there is no kernal panic, then the page right under the current top of the stack wass allocated and mapped. SUCCESS!");
+    printf(1, "If there is no kernal panic, then the page right under the current top of the stack wass allocated and mapped. SUCCESS!\n");
 
     exit();
     return 0;
