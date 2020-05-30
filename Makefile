@@ -178,6 +178,7 @@ UPROGS=\
 	_shm_cnt\
 	_null\
 	_test\
+        _test2\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
