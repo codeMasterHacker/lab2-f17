@@ -46,7 +46,7 @@ trap(struct trapframe *tf)
     return;
   }
 
-  unit lowAddress, highAddress, faultyAddress;
+  uint lowAddress, highAddress, faultyAddress;
 
   switch(tf->trapno){
   case T_PGFLT: //cs153_lab3: page fault handler
