@@ -56,7 +56,8 @@ trap(struct trapframe *tf)
 
     if (faultyAddress > lowAddress && faultyAddress < highAddress) //cs153_lab3: check if the page fault was caused by an access to the page right under the current top of the stack
     {
-      allocuvm(myproc()->pgdir, lowAddress, highAddress); //cs153_lab3: allocate and map the page
+      if (!allocuvm(myproc()->pgdir, lowAddress, highAddress)) //cs153_lab3: allocate and map the page
+        goto Default;
       myproc()->userStack_numPages++; //cs153_lab3: add a single page to the user stack
       cprintf("Current top of user stack: %x\n", KERNBASE - (myproc()->userStack_numPages * PGSIZE));
     }
