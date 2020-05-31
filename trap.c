@@ -54,7 +54,8 @@ trap(struct trapframe *tf)
     lowAddress = highAddress - PGSIZE; //cs153_lab3: the page right under the current top of the stack
     faultyAddress = rcr2();
 
-    if (faultyAddress > lowAddress && faultyAddress < highAddress) //cs153_lab3: check if the page fault was caused by an access to the page right under the current top of the stack
+    //cs153_lab3: check if the page fault was caused by an access to the page right under the current top of the stack
+    if (faultyAddress > lowAddress && faultyAddress < highAddress)
     {
       if (!allocuvm(myproc()->pgdir, lowAddress, highAddress)) //cs153_lab3: allocate and map the page
         goto Default;
