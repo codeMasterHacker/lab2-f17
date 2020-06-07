@@ -32,11 +32,11 @@ void shminit() {
 
 int shm_open(int id, char **pointer)      
 {
-    int found = 0; int emptyIndex = -1;
+    int found = 0; int i = 0; int emptyIndex = -1;
     char* mem = 0;
 
     acquire(&(shm_table.lock));
-    for (int i = 0; i < 64; i++)
+    for (; i < 64; i++)
     {
         if (shm_table.shm_pages[i].id == id)
         {
@@ -95,8 +95,10 @@ int shm_open(int id, char **pointer)
 
 int shm_close(int id)
 {
+    int i = 0;
+
     acquire(&(shm_table.lock));
-    for (int i = 0; i < 64; i++)
+    for (; i < 64; i++)
     {
         if (shm_table.shm_pages[i].id == id)
         {
