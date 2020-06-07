@@ -41,12 +41,12 @@ int shm_open(int id, char **pointer)
         if (shm_table.shm_pages[i].id == id)
         {
             found = 1;
-            if(mappages(myproc()->pgdir, (char*)PGROUNDUP(myproc()->sz), PGSIZE, V2P(shm_table.shm_pages[i].frame), PTE_W|PTE_U) < 0)
+            if(mappages(myproc()->pgdir, (char*)myproc()->sz, PGSIZE, V2P(shm_table.shm_pages[i].frame), PTE_W|PTE_U) < 0)
 	        cprintf("mapping of segment id to an available page in our virtual address space failed!!!\n");
             else
             {
                 shm_table.shm_pages[i].refcnt++;
-	        *pointer=(char *)PGROUNDUP(myproc()->sz);
+	        *pointer=(char *)myproc()->sz;
                 myproc()->sz += PGSIZE;
             }
         
@@ -73,7 +73,7 @@ int shm_open(int id, char **pointer)
 
         shm_table.shm_pages[emptyIndex].refcnt = 1;
 
-        if(mappages(myproc()->pgdir, (char*)PGROUNDUP(myproc()->sz), PGSIZE, V2P(mem), PTE_W|PTE_U) < 0)
+        if(mappages(myproc()->pgdir, (char*)myproc()->sz, PGSIZE, V2P(mem), PTE_W|PTE_U) < 0)
         {
             cprintf("shm_open out of memory (2)\n");
             //deallocuvm(pgdir, newsz, oldsz);
@@ -81,7 +81,7 @@ int shm_open(int id, char **pointer)
         }
         else
         {
-            *pointer=(char *)PGROUNDUP(myproc()->sz);
+            *pointer=(char *)myproc()->sz;
             myproc()->sz += PGSIZE;
         }
     }
